@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue - Clean India</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex justify-between items-center" style="height: 100%;">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-leaf"></i> Clean India
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="upload.html" class="nav-link active">Report Issue</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-12">
+        <div class="flex justify-center">
+            <div class="card p-8" style="max-width: 600px; width: 100%;">
+                <div class="text-center mb-8">
+                    <h2 class="mb-2">Report a Waste Spot</h2>
+                    <p class="text-muted">Help us clean up by providing details below.</p>
+                </div>
+
+                <form id="uploadForm">
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Evidence Photo</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="imageInput"
+                                class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                                style="border-color: var(--neutral-200); background-color: var(--neutral-50);">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6" id="dropzone-content">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"
+                                        style="font-size: 2.5rem; color: var(--neutral-500);"></i>
+                                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to
+                                            upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                </div>
+                                <img id="preview" class="hidden w-full h-full object-cover rounded-lg" />
+                                <input id="imageInput" type="file" class="hidden" accept="image/*" required />
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="form-group">
+                        <label class="form-label" for="location">Location Name</label>
+                        <input type="text" id="location" class="form-control"
+                            placeholder="e.g., Central Park Entrance, Sector 4" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="lat">Latitude</label>
+                            <input type="number" step="any" id="lat" class="form-control" placeholder="28.6139"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lng">Longitude</label>
+                            <input type="number" step="any" id="lng" class="form-control" placeholder="77.2090"
+                                required>
+                        </div>
+                    </div>
+                    <div class="text-right mb-4">
+                        <button type="button" class="btn btn-ghost btn-sm text-primary" onclick="getLocation()">
+                            <i class="fas fa-location-arrow"></i> Use Current Location
+                        </button>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea id="description" class="form-control" rows="4"
+                            placeholder="Describe the waste/pollution..." required></textarea>
+                    </div>
+
+                    <!-- Personal Info -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label" for="reporterName">Your Name</label>
+                            <input type="text" id="reporterName" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reporterPhone">Phone Number</label>
+                            <input type="tel" id="reporterPhone" class="form-control" placeholder="9876543210" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full mt-4" style="width: 100%;">
+                        Submit Report
+                    </button>
+                </form>
+
+                <div id="message" class="mt-4 hidden p-4 rounded-lg text-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Image Preview Logic
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('preview');
+        const dropzoneContent = document.getElementById('dropzone-content');
+
+        imageInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    dropzoneContent.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Geolocation
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById('lat').value = position.coords.latitude.toFixed(6);
+                    document.getElementById('lng').value = position.coords.longitude.toFixed(6);
+                }, () => {
+                    alert("Unable to retrieve your location");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+</body>
+
+</html>
