@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1764267286885",
+    "imageUrl": "/uploads/1764267286835.png",
+    "location": "kadri park",
+    "lat": 12.8936,
+    "lng": 77.6355,
+    "description": "vineeth throwing waste",
+    "reporterName": "praveen",
+    "reporterPhone": "9356562132",
+    "status": "Verified",
+    "timestamp": 1764267286885,
+    "repeatCount": 0
+  },
+  {
+    "id": "1716881234567",
+    "imageUrl": "https://images.unsplash.com/photo-1611288870280-4a331d941501?q=80&w=2574&auto=format&fit=crop",
+    "location": "Central Park, Sector 4",
+    "lat": 28.6139,
+    "lng": 77.209,
+    "description": "Pile of plastic waste near the park entrance.",
+    "reporterName": "Amit Sharma",
+    "reporterPhone": "9876543210",
+    "status": "Verified",
+    "timestamp": 1716881234567,
+    "repeatCount": 1
+  }
+]

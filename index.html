@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean India - Let's Make India Clean Together</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex justify-between items-center" style="height: 100%;">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-leaf"></i> Clean India
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="upload.html" class="nav-link">Report Issue</a>
+                <a href="reports.html" class="nav-link">Reports</a>
+                <a href="admin.html" class="nav-link">Admin</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="md-hidden" style="display: none;"> <!-- Mobile Menu Placeholder -->
+                <button class="btn btn-ghost"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <div class="flex items-center gap-8">
+                <div class="hero-content flex-1">
+                    <div class="badge badge-verified mb-4">Civic Tech Initiative</div>
+                    <h1 class="mb-6">Let's Make India <span class="text-primary">Clean Together</span></h1>
+                    <p class="text-muted text-xl mb-8" style="max-width: 540px;">
+                        Join the movement to keep our cities and villages clean. Report waste, track progress, and make
+                        a real difference in your community.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="upload.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-camera"></i> Report a Waste Spot
+                        </a>
+                        <a href="reports.html" class="btn btn-secondary btn-lg">
+                            View Reports
+                        </a>
+                    </div>
+                    <div class="mt-8 flex items-center gap-4 text-muted text-sm">
+                        <span><i class="fas fa-check-circle text-primary"></i> Free to use</span>
+                        <span><i class="fas fa-check-circle text-primary"></i> Open Source</span>
+                        <span><i class="fas fa-check-circle text-primary"></i> Community Driven</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="hero-image-container">
+                        <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2670&auto=format&fit=crop"
+                            alt="Clean India Dashboard Mockup" style="width: 100%; height: auto; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- How It Works -->
+    <section class="py-20 bg-white">
+        <div class="container">
+            <div class="text-center mb-12">
+                <h2 class="mb-4">How It Works</h2>
+                <p class="text-muted text-lg">Report pollution in 4 simple steps</p>
+            </div>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="step-card">
+                    <div class="mb-4 text-primary" style="font-size: 2.5rem;">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h4 class="mb-2">1. Take Photo</h4>
+                    <p class="text-muted text-sm">Snap a clear photo of the waste spot.</p>
+                </div>
+                <div class="step-card">
+                    <div class="mb-4 text-primary" style="font-size: 2.5rem;">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4 class="mb-2">2. Add Location</h4>
+                    <p class="text-muted text-sm">Tag the exact location on the map.</p>
+                </div>
+                <div class="step-card">
+                    <div class="mb-4 text-primary" style="font-size: 2.5rem;">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h4 class="mb-2">3. Submit</h4>
+                    <p class="text-muted text-sm">Send your report to the platform.</p>
+                </div>
+                <div class="step-card">
+                    <div class="mb-4 text-primary" style="font-size: 2.5rem;">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <h4 class="mb-2">4. Action</h4>
+                    <p class="text-muted text-sm">Admins verify and authorities clean it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="py-20">
+        <div class="container">
+            <div class="grid grid-cols-3 gap-8">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-reports">1,200+</div>
+                    <div class="text-muted font-medium">Reports Submitted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-cleaned">850+</div>
+                    <div class="text-muted font-medium">Areas Cleaned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-citizens">5,000+</div>
+                    <div class="text-muted font-medium">Citizens Involved</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Reports Preview -->
+    <section class="py-20 bg-white">
+        <div class="container">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="mb-2">Recent Reports</h2>
+                    <p class="text-muted">See what's happening in your area</p>
+                </div>
+                <a href="reports.html" class="btn btn-ghost">View All Reports <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div id="recent-reports-grid" class="grid grid-cols-3 gap-6">
+                <!-- Reports injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 bg-white border-t border-neutral-200" id="contact">
+        <div class="container">
+            <div class="grid grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2" style="grid-column: span 2;">
+                    <a href="#" class="nav-brand mb-4">
+                        <i class="fas fa-leaf"></i> Clean India
+                    </a>
+                    <p class="text-muted" style="max-width: 300px;">
+                        Empowering citizens to take charge of their environment through technology and community action.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="mb-4 text-sm uppercase tracking-wider text-neutral-500">Platform</h4>
+                    <ul class="flex flex-col gap-2 text-neutral-700">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="reports.html">Reports</a></li>
+                        <li><a href="upload.html">Submit Report</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mb-4 text-sm uppercase tracking-wider text-neutral-500">Connect</h4>
+                    <ul class="flex flex-col gap-2 text-neutral-700">
+                        <li><a href="#"><i class="fab fa-twitter mr-2"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-facebook mr-2"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-instagram mr-2"></i> Instagram</a></li>
+                        <li><a href="mailto:hello@cleanindia.org"><i class="fas fa-envelope mr-2"></i> Email Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-neutral-200 text-center text-muted text-sm">
+                &copy; 2024 Clean India Initiative. Built for a better tomorrow.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Inline script to load recent reports
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const allReports = await DataManager.getReports();
+                const reports = allReports.slice(0, 3);
+                const grid = document.getElementById('recent-reports-grid');
+
+                reports.forEach(report => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div style="height: 200px; overflow: hidden; border-bottom: 1px solid var(--neutral-200);">
+                            <img src="${report.imageUrl}" alt="Report Image" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="badge ${Utils.getStatusBadgeClass(report.status)}">${report.status}</span>
+                                <span class="text-muted text-sm">${Utils.formatDate(report.timestamp)}</span>
+                            </div>
+                            <h4 class="mb-2 text-lg">${report.location}</h4>
+                            <p class="text-muted text-sm mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${report.description}</p>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                console.error("Failed to load reports", e);
+            }
+        });
+    </script>
+</body>
+
+</html>

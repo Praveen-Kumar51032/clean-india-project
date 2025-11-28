@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Clean India</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Table Styles specific to Admin */
+        .table-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--neutral-200);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        th {
+            background-color: var(--neutral-50);
+            font-weight: 600;
+            color: var(--neutral-700);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: var(--neutral-50);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            background: var(--neutral-50);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--neutral-700);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="index.html" class="nav-brand mb-8">
+                <i class="fas fa-leaf"></i> Clean India
+            </a>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" onclick="switchTab('overview')">
+                    <i class="fas fa-chart-pie w-6"></i> Overview
+                </a>
+                <a href="#" class="sidebar-link" onclick="switchTab('pending')">
+                    <i class="fas fa-clock w-6"></i> Pending
+                </a>
+                <a href="#" class="sidebar-link" onclick="switchTab('verified')">
+                    <i class="fas fa-check-circle w-6"></i> Verified
+                </a>
+                <a href="#" class="sidebar-link" onclick="switchTab('rejected')">
+                    <i class="fas fa-times-circle w-6"></i> Rejected
+                </a>
+                <div style="flex-grow: 1;"></div>
+                <a href="index.html" class="sidebar-link">
+                    <i class="fas fa-sign-out-alt w-6"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="mb-1">Dashboard</h2>
+                    <p class="text-muted">Welcome back, Admin.</p>
+                </div>
+                <div class="flex gap-4">
+                    <button class="btn btn-secondary btn-sm" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="stat-card p-6 flex items-center justify-between">
+                    <div class="text-left">
+                        <div class="text-muted text-sm font-medium uppercase mb-1">Pending</div>
+                        <div class="stat-number" style="font-size: 2.5rem;" id="count-pending">0</div>
+                    </div>
+                    <div class="text-warning" style="font-size: 2rem; opacity: 0.2;"><i class="fas fa-clock"></i></div>
+                </div>
+                <div class="stat-card p-6 flex items-center justify-between">
+                    <div class="text-left">
+                        <div class="text-muted text-sm font-medium uppercase mb-1">Verified</div>
+                        <div class="stat-number text-success" style="font-size: 2.5rem;" id="count-verified">0</div>
+                    </div>
+                    <div class="text-success" style="font-size: 2rem; opacity: 0.2;"><i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-card p-6 flex items-center justify-between">
+                    <div class="text-left">
+                        <div class="text-muted text-sm font-medium uppercase mb-1">Rejected</div>
+                        <div class="stat-number text-danger" style="font-size: 2.5rem;" id="count-rejected">0</div>
+                    </div>
+                    <div class="text-danger" style="font-size: 2rem; opacity: 0.2;"><i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Reports Table -->
+            <div class="table-container">
+                <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+                    <h3 class="text-lg">Recent Reports</h3>
+                    <div class="flex gap-2">
+                        <!-- Search placeholder -->
+                        <input type="text" placeholder="Search location..." class="form-control"
+                            style="padding: 0.5rem; font-size: 0.875rem; width: 200px;">
+                    </div>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Report</th>
+                                <th>Location</th>
+                                <th>Reporter</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="review-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="text-xl font-bold">Review Report</h3>
+                <button class="btn btn-ghost btn-sm" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-6">
+                    <img id="modal-image" src="" alt="Report Image"
+                        style="width: 100%; height: 250px; object-fit: cover; border-radius: var(--radius-md);">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="text-xs uppercase text-muted font-bold">Location</label>
+                        <div id="modal-location" class="font-medium"></div>
+                    </div>
+                    <div>
+                        <label class="text-xs uppercase text-muted font-bold">Reporter</label>
+                        <div id="modal-reporter" class="font-medium"></div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="text-xs uppercase text-muted font-bold">Description</label>
+                    <p id="modal-description" class="text-neutral-700"></p>
+                </div>
+
+                <hr class="mb-6 border-neutral-200">
+
+                <div class="form-group">
+                    <label class="form-label">Problem Type</label>
+                    <select id="problem-type" class="form-select">
+                        <option value="">Select Type...</option>
+                        <option value="Garbage Dumping">Garbage Dumping</option>
+                        <option value="Burning Waste">Burning Waste</option>
+                        <option value="Illegal Dumping">Illegal Dumping</option>
+                        <option value="Traffic Violation">Traffic Violation</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Forward To</label>
+                    <select id="forward-to" class="form-select">
+                        <option value="">Select Authority...</option>
+                        <option value="Municipality">Municipality</option>
+                        <option value="Traffic Police">Traffic Police</option>
+                        <option value="Local Police">Local Police</option>
+                        <option value="NGOs">NGOs</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer flex-col items-stretch">
+                <div class="flex gap-2 justify-end">
+                    <button class="btn btn-primary flex-1" onclick="submitAction('Municipality')">Send to
+                        Municipality</button>
+                    <button class="btn btn-secondary flex-1" onclick="submitAction('Police')">Send to Police</button>
+                </div>
+                <div class="flex gap-2 justify-end mt-2">
+                    <button class="btn btn-success flex-1" onclick="submitAction('Resolved')">Mark as Resolved</button>
+                    <button class="btn btn-danger flex-1" onclick="submitAction('Rejected')">Reject Fake Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let allReports = [];
+        let currentReportId = null;
+        // API_URL is defined in script.js
+
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshData();
+        });
+
+        async function refreshData() {
+            allReports = await DataManager.getReports();
+            updateStats();
+            renderTable(allReports);
+        }
+
+        function updateStats() {
+            document.getElementById('count-pending').textContent = allReports.filter(r => r.status === 'Pending').length;
+            document.getElementById('count-verified').textContent = allReports.filter(r => r.status === 'Verified').length;
+            document.getElementById('count-rejected').textContent = allReports.filter(r => r.status === 'Rejected').length;
+        }
+
+        function renderTable(reports) {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            reports.forEach(report => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <img src="${report.imageUrl}" alt="" style="width: 40px; height: 40px; border-radius: var(--radius-sm); object-fit: cover;">
+                            <span class="text-sm font-medium text-neutral-900">#${report.id.slice(-4)}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-sm font-medium">${report.location}</div>
+                        <div class="text-xs text-muted">Lat: ${report.lat.toFixed(4)}, Lng: ${report.lng.toFixed(4)}</div>
+                    </td>
+                    <td>
+                        <div class="text-sm">${report.reporterName}</div>
+                        <div class="text-xs text-muted">${report.reporterPhone}</div>
+                    </td>
+                    <td class="text-sm text-muted">
+                        ${Utils.formatDate(report.timestamp)}
+                    </td>
+                    <td>
+                        <span class="badge ${Utils.getStatusBadgeClass(report.status)}">${report.status}</span>
+                    </td>
+                    <td>
+                        <div class="flex gap-2">
+                            ${report.status === 'Pending' ? `
+                                <button onclick="openReviewModal('${report.id}')" class="btn btn-primary btn-sm" style="padding: 4px 12px;" title="Review">
+                                    Review
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-ghost btn-sm" style="padding: 4px 8px;" title="Download">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openReviewModal(id) {
+            const report = allReports.find(r => r.id === id);
+            if (!report) return;
+
+            currentReportId = id;
+            document.getElementById('modal-image').src = report.imageUrl;
+            document.getElementById('modal-location').textContent = report.location;
+            document.getElementById('modal-reporter').textContent = `${report.reporterName} (${report.reporterPhone})`;
+            document.getElementById('modal-description').textContent = report.description;
+
+            // Reset form
+            document.getElementById('problem-type').value = '';
+            document.getElementById('forward-to').value = '';
+
+            document.getElementById('review-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('review-modal').classList.remove('active');
+            currentReportId = null;
+        }
+
+        async function submitAction(action) {
+            if (!currentReportId) return;
+
+            const problemType = document.getElementById('problem-type').value;
+            const forwardTo = document.getElementById('forward-to').value;
+            let status = 'Pending';
+            let finalForwardTo = forwardTo;
+
+            // Validation
+            if ((action === 'Municipality' || action === 'Police') && !problemType) {
+                alert('Please select a Problem Type.');
+                return;
+            }
+
+            if (action === 'Municipality') {
+                status = 'Verified';
+                finalForwardTo = 'Municipality';
+                if (!forwardTo) {
+                    finalForwardTo = 'Municipality';
+                }
+            } else if (action === 'Police') {
+                status = 'Verified';
+                if (!forwardTo || (!forwardTo.includes('Police'))) {
+                    finalForwardTo = 'Local Police';
+                }
+            } else if (action === 'Resolved') {
+                status = 'Resolved';
+            } else if (action === 'Rejected') {
+                status = 'Rejected';
+            }
+
+            // Prepare payload
+            const payload = {
+                status: status,
+                problemType: problemType,
+                forwardTo: finalForwardTo
+            };
+
+            try {
+                // Use fetch directly to ensure we hit the correct endpoint with all data
+                const response = await fetch(`${API_URL}/reports/${currentReportId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    closeModal();
+                    refreshData();
+                } else {
+                    alert('Failed to update report.');
+                }
+            } catch (error) {
+                console.error('Error updating report:', error);
+                alert('An error occurred.');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (tab === 'overview') renderTable(allReports);
+            else if (tab === 'pending') renderTable(allReports.filter(r => r.status === 'Pending'));
+            else if (tab === 'verified') renderTable(allReports.filter(r => r.status === 'Verified'));
+            else if (tab === 'rejected') renderTable(allReports.filter(r => r.status === 'Rejected'));
+        }
+    </script>
+</body>
+
+</html>
